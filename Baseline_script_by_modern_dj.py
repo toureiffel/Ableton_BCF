@@ -44,6 +44,13 @@ class Baseline_script_by_modern_dj(ControlSurface):
     __module__ = __name__ # Edie Brickell song
     __doc__ = " modern.dj baseline MRS controller script  for live 9 http://modern.dj/app" #shamless self promotion
     
+    # In the instance of using this script more than one time in Live 8 the error log started filling up
+    # with odd erromessages. This kills error reporting for a clean log
+    # Is the issue fixed? please email em marc@modern.dj if you know or can help.
+    # This code is commented out and left available for anyone who needs to know more
+    #def handle_sysex(self, midi_bytes):
+    #    return None
+    
     # bootstrap method
     def __init__(self, c_instance):
         ControlSurface.__init__(self, c_instance) # bootstrap into the API/_Framework
