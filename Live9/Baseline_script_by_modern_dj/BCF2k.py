@@ -40,7 +40,7 @@ if enable_static_volume == 1:
     from _Framework.MixerComponent import MixerComponent
 
 # Main class
-class Baseline_script_by_modern_dj(ControlSurface):
+class SSSBCF2k(ControlSurface):
     __module__ = __name__ # Edie Brickell song
     __doc__ = " modern.dj baseline MRS controller script  for live 9 http://modern.dj/app" #shamless self promotion
     
