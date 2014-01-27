@@ -11,6 +11,7 @@ import Live # Script that instantiates artificial intelligence and mind reading 
 import time # Required for error logging
 # what we need from _Framework o a general sense
 from _Framework.ButtonElement import ButtonElement # button elemtns
+from _Framework.EncoderElement import EncoderElement # encoder elemtns (BCF2k)
 from _Framework.ButtonMatrixElement import ButtonMatrixElement # martix/grd/box
 from _Framework.ClipSlotComponent import ClipSlotComponent  #hold buttons
 from _Framework.CompoundComponent import CompoundComponent # Bueller?
@@ -28,7 +29,11 @@ from CustomSessionComponent import CustomSessionComponent
 if enable_tempo_control == 1:
     from tempo_control import CustomTransportComponent # I subclass there for I am
     from _Framework.TransportComponent import TransportComponent # tempo+?
-    
+
+# import what is required for device parameters control (BCF2k)
+if enable_device_control == 1:
+    from _Framework.DeviceComponent import DeviceComponent
+
 # import what is required for  standard volume control
 if enable_volume_control == 1:
     from _Framework.SliderElement import SliderElement #  required for knob/slider element
@@ -40,7 +45,7 @@ if enable_static_volume == 1:
     from _Framework.MixerComponent import MixerComponent
 
 # Main class
-class SSSBCF2k(ControlSurface):
+class BCF2k(ControlSurface):
     __module__ = __name__ # Edie Brickell song
     __doc__ = " modern.dj baseline MRS controller script  for live 9 http://modern.dj/app" #shamless self promotion
     
@@ -58,7 +63,7 @@ class SSSBCF2k(ControlSurface):
             self.log_message(" - ")
             self.log_message("**************************************************")
             self.version_information() # log information from the readme.py file
-            self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 baseline MRS opened ||::..")
+            self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 (BCF2k modded) baseline MRS opened ||::..")
             self._suppress_session_highlight = True # stop the "Red box" for a second
             self._suppress_send_midi = True # sounds like a good idea
             #self.set_suppress_rebuild_requests(True) #deprecated for 9 !! Legacy note keep here for repository ref, remove later!!
@@ -82,6 +87,12 @@ class SSSBCF2k(ControlSurface):
                         self.custom_offset_mixer() 
                     else :
                         self.track_volume = track_volume # localize tuple of CCs for volume control
+                        self.track_pan = track_pan
+                        self.track_sendA = track_sendA
+                        self.track_sendB = track_sendB
+                        self.track_sendC = track_sendC
+                        self.track_arm = track_arm
+                        self.track_select = track_select
                         self._setup_mixer_control()
                     self.session.set_mixer(self.mixer) # for the red box to move left/right w/session
                 else:
@@ -94,6 +105,12 @@ class SSSBCF2k(ControlSurface):
                 self._setup_transport_control()
             else:
                 self.log_message("[tempo not enabled]")
+            # Check for device parameters control option
+            if enable_device_control == 1:
+                self.log_message("[device control enabled]")
+                self._setup_device_control()
+            else:
+                self.log_message("[Device control not enabled]")
             # turn on "red box" again --  drops mic, walks off stage
             self._suppress_session_highlight = False
 
@@ -102,6 +119,16 @@ class SSSBCF2k(ControlSurface):
     def _setup_transport_control(self):
         transport = CustomTransportComponent() #Instantiate a Transport Component
         transport.set_tempo_bumpers(transport.button(tempo_button_up), transport.button(tempo_button_down)) # yells "DO IT!!" at tempo code
+
+    # add device control and default device params
+    def _setup_device_control(self):
+        self._device = DeviceComponent()
+        self._device.name = 'Device_Component'
+        device_param_controls = []
+        for index in range(8):
+            device_param_controls.append(self.encoderAbs(midi_channel, self.track_sendC[index]))
+        self._device.set_parameter_controls(device_param_controls)
+        self.set_device_component(self._device)
 
     # pass session component through a bunch of subclassing
     def _setup_session_control(self):
@@ -185,6 +212,28 @@ class SSSBCF2k(ControlSurface):
         else:
             return None
 
+    # Creation of a relative 2 value encoder (rotary, etc: BCK2k)
+    def encoder(self, channel, value):
+        if (value != -1):
+            return EncoderElement(MIDI_CC_TYPE, channel, value, Live.MidiMap.MapMode.relative_two_compliment)
+        else:
+            return None
+
+    # Creation of an absolute value encoder (rotary, etc: BCK2k)
+    def encoderAbs(self, channel, value):
+        if (value != -1):
+            return EncoderElement(MIDI_CC_TYPE, channel, value, Live.MidiMap.MapMode.absolute)
+        else:
+            return None
+
+    # Creation of an standard button (midi, BCK2k)
+    def button(self, channel, value):
+        if (value != -1):
+            is_momentary = True
+            return ButtonElement(is_momentary, MIDI_NOTE_TYPE, channel, value)
+        else:
+            return None
+
     # Static volume control offset via volume_offset param
     def custom_offset_mixer(self):
         # skipped the subclass
@@ -208,11 +257,28 @@ class SSSBCF2k(ControlSurface):
            # loop on the CCs and create strip/volume control
            for index in range(self.box_width): #  @todo kill this and count in reverse via decrement (performance)
                self.mixer.channel_strip(index).set_volume_control(self.slider(midi_channel, self.track_volume[index]))
+               # extra controls to be added here
+               self.mixer.channel_strip(index).set_pan_control(self.encoder(midi_channel, self.track_pan[index]))
+               self.mixer.channel_strip(index).set_send_controls([self.encoderAbs(midi_channel, self.track_sendA[index]), self.encoderAbs(midi_channel, self.track_sendB[index])])
+               self.mixer.channel_strip(index).set_arm_button(self.button(midi_channel, self.track_arm[index]))
+               self.mixer.channel_strip(index).set_select_button(self.button(midi_channel, self.track_select[index]))
+               self.mixer.channel_strip(index).set_invert_mute_feedback(True)
+               # end of extra controls
        else: # bad math, error messAge, fail
            self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| volume param bad math message. box_width != len(track_volume) ||::..")
-    
+
+    def _on_selected_track_changed(self):
+        ControlSurface._on_selected_track_changed(self)
+        track = self.song().view.selected_track
+        device_to_select = track.view.selected_device
+        if device_to_select == None and len(track.devices) > 0:
+            device_to_select = track.devices[0]
+        if device_to_select != None:
+            self.song().view.select_device(device_to_select)
+        #self._device_component.set_device(device_to_select)
+           
     def disconnect(self):
-        self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 baseline MRS  closed ||::..")
+        self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 (BCF2k modded) baseline MRS  closed ||::..")
         self.log_message("**************************************************")
         self.log_message(" - ")
         ControlSurface.disconnect(self)
@@ -222,7 +288,7 @@ class SSSBCF2k(ControlSurface):
         baseline_version = str(baseline_script_version_major)
         baseline_version += '.'+str(baseline_script_version_minor)
         baseline_version += '.'+str(baseline_script_version_patch)
-        self.log_message('Modern.Dj Baseline Script Version '+baseline_version)
+        self.log_message('Modern.Dj Baseline Script (BCF2k modded) Version '+baseline_version)
         self.log_message('Modern.Dj Baseline Script Release Note : '+baseline_script_version_note)
  
 '''
