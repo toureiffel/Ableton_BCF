@@ -109,7 +109,7 @@ track_pan =    [33,34,35,36,37,38,39,40]
 
 # enable static volume  / offset volume - will not move w/box overriding track_volume
 enable_static_volume = 1 # 1 for yes, 0 for no
-track_volume_static = [1, 2, 3, 4, 5, 6, 7] # the CC's
+track_volume_static = [9, 10, 11, 12, 13, 14, 15] # the CC's
 ### (if used) the number of track_volume_static values must match box_width 
 
 # Applies only to enable_static_volume = 1
