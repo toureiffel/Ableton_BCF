@@ -182,7 +182,7 @@ class BCF2k(ControlSurface):
                 self.clip_triggered_to_play = clip_triggered_to_play
 
             for scene_index in range(self.box_height): # loop on the notes matrix
-                scene = self.session.scene(scene_index) # part of the martix built, think rows
+                scene = self.session.scene(scene_index) # part of the matrix built, think rows
                 scene.name = 'Scene_' + str(scene_index) # sure, why not
                 button_row = [] # create recepticle
                 # loop across the tracks
@@ -193,7 +193,7 @@ class BCF2k(ControlSurface):
                     button_row.append(button) # add to our growing list
                     clip_slot = scene.clip_slot(track_index) # clips slot and buttons are not the same thing, this aligns these ideas in the red box
                     clip_slot.name = str(track_index) + '_Clip_Slot_' + str(scene_index) # sure, why not
-                    # assign the button and and status in th refrech update
+                    # assign the button and and status in the refresh update
                     clip_slot.set_stopped_value(self.clip_loaded_stopped ) # this number is sent back to the machine allowing diff colors for stopped
                     clip_slot.set_started_value(self.clip_currently_playing) # this number is sent back to the machine allowing diff colors for started/is-playing
                     clip_slot.set_triggered_to_play_value(self.clip_triggered_to_play) # this number is sent back to the machine allowing diff colors for cued, will play next                   
@@ -238,7 +238,7 @@ class BCF2k(ControlSurface):
     def custom_offset_mixer(self):
         # skipped the subclass
         # for some reason this pattern will allow the offset and static volume control.
-        # looking for explaination and insight on this...Bueller?
+        # looking for explanation and insight on this...Bueller?
         self.mixer_custom = MixerComponent(self.box_width) # get a local mixer object ready
         self.mixer_custom.name = 'Mixer Custom' # name
         self.mixer_custom.set_track_offset(self.volume_offset)  # the offset

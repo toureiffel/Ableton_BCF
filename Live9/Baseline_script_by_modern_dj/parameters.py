@@ -40,17 +40,15 @@ right_button_note_number = 123 # right navigation
 ## Declare the size of the box in Ableton clip cells.
 # This is used to check the launch button count where box_width x box_height = count(launch_button_list)
 # used for volume 
-box_width = 8 # width of the the "red-box" aka tracks
-box_height = 2 #height of the "red-box" aka scenes
+box_width = 7 # width of the the "red-box" aka tracks
+box_height = 1 #height of the "red-box" aka scenes
 
 ### Launch button list *** Required *** Python list format
 # Assigned Left to Right, Top to bottom, comma separated
-launch_button_list = [
-    41,42,43,44,45,46,47,48,
-    49,50,51,52,53,54,55,56
-#   57,58,59,60,61,62,63,64,
-#   65,66,67,68,69,70,71,72
-    ]
+launch_button_list = [41,42,43,44,45,46,47,48,
+                     #49,50,51,52,53,54,55,56
+                     #57,58,59,60,61,62,63,64,
+                     #65,66,67,68,69,70,71,72]
 # the number of notes in launch_button_list must match box_width * box_height
 
 # Assigned left to right. Use empty list do disable example below.
@@ -110,14 +108,14 @@ track_sendC =  [25,26,27,28,29,30,31,32]
 track_pan =    [33,34,35,36,37,38,39,40]
 
 # enable static volume  / offset volume - will not move w/box overriding track_volume
-enable_static_volume = 0 # 1 for yes, 0 for no
-track_volume_static = [1, 2, 3, 4] # the CC's
+enable_static_volume = 1 # 1 for yes, 0 for no
+track_volume_static = [1, 2, 3, 4, 5, 6, 7] # the CC's
 ### (if used) the number of track_volume_static values must match box_width 
 
 # Applies only to enable_static_volume = 1
 # Track offset 0 has no effect, positive number values will push the audio volume to the right
 # skips MIDI tracks.  
-volume_offset = 4
+volume_offset = 7
 
 # ******************************************************************************
 # * Livid Instruments Specific Support
@@ -139,7 +137,7 @@ LIVID_GREEN = 127
 
 # set to true to enable RGB velocity feedback (conditional check)
 # Used to turn code block on/off
-use_velocity_for_RGB = 1  # 1 for yes, 0 for no
+use_velocity_for_RGB = 0  # 1 for yes, 0 for no
 
 # Use MIDI range per device (0-127). Consult something to tell you what you need to know.
 # This is the velocity returned to the following clip states
