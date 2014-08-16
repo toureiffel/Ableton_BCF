@@ -267,8 +267,8 @@ class BCF2k(ControlSurface):
                self.mixer.channel_strip(index).set_select_button(self.button(midi_channel, self.track_select[index]))
                self.mixer.channel_strip(index).set_invert_mute_feedback(True)
                # end of extra controls
-       self.mixer._master_strip.set_volume_control(self.slider(midi_channel, self.track_volume[index+1]))
-       self.mixer._master_strip.set_pan_control(self.encoder(midi_channel, self.track_pan[index+1]))
+           self.mixer._master_strip.set_volume_control(self.slider(midi_channel, self.track_volume[index+1]))
+           self.mixer._master_strip.set_pan_control(self.encoder(midi_channel, self.track_pan[index+1]))
        else: # bad math, error messAge, fail
            self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| volume param bad math message. box_width != len(track_volume) ||::..")
 
