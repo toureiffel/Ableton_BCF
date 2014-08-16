@@ -84,7 +84,8 @@ class BCF2k(ControlSurface):
                     if enable_static_volume == 1 :
                         self.track_volume_static = track_volume_static # localize tuple of CCs for volume control
                         self.mixer_custom = None
-                        self.custom_offset_mixer() 
+                        self.custom_offset_mixer()
+                        self.track_sendC = track_sendC
                     else :
                         self.track_volume = track_volume # localize tuple of CCs for volume control
                         self.track_pan = track_pan
@@ -125,8 +126,10 @@ class BCF2k(ControlSurface):
         self._device = DeviceComponent()
         self._device.name = 'Device_Component'
         device_param_controls = []
-        for index in range(8):
-            device_param_controls.append(self.encoderAbs(midi_channel, self.track_sendC[index]))
+        if len(self.track_sendC) >= self.box_width:  # error checking per established app standard
+           # loop on the CCs and create strip/volume control
+           for index in range(len(self.track_sendC)): #  @todo kill this and count in reverse via decrement (performance)
+             device_param_controls.append(self.encoderAbs(midi_channel, self.track_sendC[index]))
         self._device.set_parameter_controls(device_param_controls)
         self.set_device_component(self._device)
 
@@ -150,12 +153,12 @@ class BCF2k(ControlSurface):
         matrix = ButtonMatrixElement() # @todo subclass this via established new patterns
         matrix.name = 'Button_Matrix' #sure, why not
         # I loop a little different. The goal is readbility, flexibility, and the web app...incase you did not notice yet
-        if len(scene_launch_notes) > 0 and len(scene_launch_notes) == self.box_height: # logic check have launch notes and scene = box height
+        if len(scene_launch_notes) > 0 and len(scene_launch_notes) >= self.box_height: # logic check have launch notes and scene = box height
             for index in range(self.box_height): 
                 self.session.scene(index).set_launch_button(ButtonElement(is_momentary, MIDI_NOTE_TYPE, midi_channel, scene_launch_notes[index])) 
         else :
             self.log_message("..::|| Scene launch not in use or error on case of use. Modern.DJ ||::..")
-        if len(stop_track_buttons) >0 and len(stop_track_buttons) == self.box_width: #logic check have track stop assignments and 
+        if len(stop_track_buttons) >0 and len(stop_track_buttons) >= self.box_width: #logic check have track stop assignments and 
             track_stop_buttons = [ ButtonElement(is_momentary, MIDI_NOTE_TYPE, midi_channel, stop_track_buttons[index]) for index in range(len(stop_track_buttons))]
             for index in range(len(track_stop_buttons)):
                 track_stop_buttons[index].name = 'Track_' + str(index) + '_Stop_Button' # sure, why not
@@ -167,7 +170,7 @@ class BCF2k(ControlSurface):
             self.session.set_stop_all_clips_button(ButtonElement(is_momentary, MIDI_NOTE_TYPE, midi_channel, stop_all_clips))
         # creating the matrix of buttons from the launch_button_list (tuple)
         launch_button_list_len = len(launch_button_list) # var used multiple times. This is a performance modification
-        if (self.box_height*self.box_width) ==  launch_button_list_len : # check box size against number of button vars sent
+        if (self.box_height*self.box_width) == launch_button_list_len : # check box size against number of button vars sent
             launch_ctr = launch_button_list_len -1 # decrement for zero offset in list/tuple
             launch_button_list.reverse() #reverse list from human readable for decrement use (performance tweak)
             ## check for use of RGB
@@ -253,7 +256,7 @@ class BCF2k(ControlSurface):
        self.mixer.name = 'Mixer' # sure, why not
        self.mixer.set_track_offset(0)  # not sure if needed, seems not to hurt.
        # check box width and tuple size. Forward compatibility
-       if len(self.track_volume) == self.box_width:  # error checking per established app standard
+       if len(self.track_volume) >= self.box_width:  # error checking per established app standard
            # loop on the CCs and create strip/volume control
            for index in range(self.box_width): #  @todo kill this and count in reverse via decrement (performance)
                self.mixer.channel_strip(index).set_volume_control(self.slider(midi_channel, self.track_volume[index]))

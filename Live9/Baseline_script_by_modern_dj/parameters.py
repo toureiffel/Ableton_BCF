@@ -11,7 +11,7 @@
 # ******************************************************************************
 
 # midi_channel is offset below. Range begins at 1, not 0. Thus assigning 1 here will send 0 to the machine
-midi_channel=1
+midi_channel = 1
 # Offsetting compensation. Yeah.
 midi_channel -= 1  # << Do not remove this unless you understand the consequences
 
@@ -45,7 +45,7 @@ box_height = 1 #height of the "red-box" aka scenes
 
 ### Launch button list *** Required *** Python list format
 # Assigned Left to Right, Top to bottom, comma separated
-launch_button_list = [41,42,43,44,45,46,47,48,
+launch_button_list = [41,42,43,44,45,46,47]
                      #49,50,51,52,53,54,55,56
                      #57,58,59,60,61,62,63,64,
                      #65,66,67,68,69,70,71,72]
@@ -54,13 +54,13 @@ launch_button_list = [41,42,43,44,45,46,47,48,
 # Assigned left to right. Use empty list do disable example below.
 #stop_track_buttons = [] # Uncomment this line to use no track stop buttons and add comment to next line
 # Track stop code block is enabled if variable is not empty via a count
-stop_track_buttons = [57,58,59,60,61,62,63,64]
+stop_track_buttons = [73,74,75,76,77,78,79]
 ### (if used) stop_track_buttons must match box_width 
 
 # Assigned top to bottom. Use empty list do disable example below.
 # scene_launch_notes = [] # Uncomment this line to use no scene launch buttons and add comment to next line
 # Scene launch code block is enabled if variable is not empty via a count
-scene_launch_notes = [99,98,97,96,95,94,93,92] 
+scene_launch_notes = [99,98,97,96,95,94,93] 
 ### (if used) scene_launch_notes launch notes must match box_height
 
 ### Stop all clips. Disabled by the use of Python None assignment. Example below.
@@ -81,8 +81,8 @@ enable_device_control = 1 # 1 for yes, 0 for no
 
 # note : tempo_control.py uses session, mixer, midi_channel
 # 70 = tempo_button_up     78 = tempo_button_down
-tempo_button_up = 90
-tempo_button_down = 71
+tempo_button_up = 80
+tempo_button_down = 81
 
 # up and down tempo interval. To go down in bpm use negative
 # examples : -1 = down 1 bpm, 3 = up 3 bpm, .02 = increase by .02 bpm (2/100th of a bpm)
@@ -95,27 +95,27 @@ tempo_button_down_interval = -1
 # ******************************************************************************
 
 # List of Notes for volume control. Reads left to right. Actually a tuple
-track_select = [65,66,67,68,69,70,71,72]
-track_arm =    [73,74,75,76,77,78,79,80]
+track_select = [57,58,59,60,61,62,63,64]
+track_arm =    [65,66,67,68,69,70,71,72]
 
 # turns on the various volume stuff
 enable_volume_control = 1
 
 track_volume = [ 9,10,11,12,13,14,15,16]
-track_sendA =  [ 1, 2, 3, 4, 5, 6, 7, 8]
-track_sendB =  [17,18,19,20,21,22,23,24]
-track_sendC =  [25,26,27,28,29,30,31,32]
+track_sendA =  [17,18,19,20,21,22,23,24]
+track_sendB =  [25,26,27,28,29,30,31,32]
+track_sendC =  [ 1, 2, 3, 4, 5, 6, 7, 8]
 track_pan =    [33,34,35,36,37,38,39,40]
 
 # enable static volume  / offset volume - will not move w/box overriding track_volume
-enable_static_volume = 1 # 1 for yes, 0 for no
+enable_static_volume = 0 # 1 for yes, 0 for no
 track_volume_static = [9, 10, 11, 12, 13, 14, 15] # the CC's
 ### (if used) the number of track_volume_static values must match box_width 
 
 # Applies only to enable_static_volume = 1
 # Track offset 0 has no effect, positive number values will push the audio volume to the right
 # skips MIDI tracks.  
-volume_offset = 7
+volume_offset = 0
 
 # ******************************************************************************
 # * Livid Instruments Specific Support
