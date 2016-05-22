@@ -11,7 +11,7 @@ import Live # Script that instantiates artificial intelligence and mind reading 
 import time # Required for error logging
 # what we need from _Framework o a general sense
 from _Framework.ButtonElement import ButtonElement # button elemtns
-from _Framework.EncoderElement import EncoderElement # encoder elemtns (BCF2k)
+from _Framework.EncoderElement import EncoderElement # encoder elemtns (Ableton_BCF)
 from _Framework.ButtonMatrixElement import ButtonMatrixElement # martix/grd/box
 from _Framework.ClipSlotComponent import ClipSlotComponent  #hold buttons
 from _Framework.CompoundComponent import CompoundComponent # Bueller?
@@ -30,7 +30,7 @@ if enable_tempo_control == 1:
     from tempo_control import CustomTransportComponent # I subclass there for I am
     from _Framework.TransportComponent import TransportComponent # tempo+?
 
-# import what is required for device parameters control (BCF2k)
+# import what is required for device parameters control (Ableton_BCF)
 if enable_device_control == 1:
     from _Framework.DeviceComponent import DeviceComponent
 
@@ -45,7 +45,7 @@ if enable_static_volume == 1:
     from _Framework.MixerComponent import MixerComponent
 
 # Main class
-class BCF2k(ControlSurface):
+class Ableton_BCF(ControlSurface):
     __module__ = __name__ # Edie Brickell song
     __doc__ = " modern.dj baseline MRS controller script  for live 9 http://modern.dj/app" #shamless self promotion
     
@@ -63,7 +63,7 @@ class BCF2k(ControlSurface):
             self.log_message(" - ")
             self.log_message("**************************************************")
             self.version_information() # log information from the readme.py file
-            self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 (BCF2k modded) baseline MRS opened ||::..")
+            self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 (Ableton_BCF modded) baseline MRS opened ||::..")
             self._suppress_session_highlight = True # stop the "Red box" for a second
             self._suppress_send_midi = True # sounds like a good idea
             #self.set_suppress_rebuild_requests(True) #deprecated for 9 !! Legacy note keep here for repository ref, remove later!!
@@ -283,7 +283,7 @@ class BCF2k(ControlSurface):
         #self._device_component.set_device(device_to_select)
            
     def disconnect(self):
-        self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 (BCF2k modded) baseline MRS  closed ||::..")
+        self.log_message(time.strftime("%d.%m.%Y %H:%M:%S", time.localtime()) + "..::|| Modern.DJ LIVE9 (Ableton_BCF modded) baseline MRS  closed ||::..")
         self.log_message("**************************************************")
         self.log_message(" - ")
         ControlSurface.disconnect(self)
@@ -293,7 +293,7 @@ class BCF2k(ControlSurface):
         baseline_version = str(baseline_script_version_major)
         baseline_version += '.'+str(baseline_script_version_minor)
         baseline_version += '.'+str(baseline_script_version_patch)
-        self.log_message('Modern.Dj Baseline Script (BCF2k modded) Version '+baseline_version)
+        self.log_message('Modern.Dj Baseline Script (Ableton_BCF modded) Version '+baseline_version)
         self.log_message('Modern.Dj Baseline Script Release Note : '+baseline_script_version_note)
  
 '''
