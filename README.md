@@ -1,3 +1,6 @@
+Work based on datamafia's Baseline script by modern dj
+
+
 This script is for Ableton Live 9 generic control needs.  Features include :
 
 1. "Red Box" Relative control and navigation for clips in Session View
